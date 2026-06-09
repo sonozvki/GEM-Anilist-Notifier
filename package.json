@@ -1,0 +1,17 @@
+{
+  "name": "ldo-bot-discord",
+  "version": "1.0.0",
+  "module": "src/index.ts",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun --watch src/index.ts"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "@types/node-cron": "^3.0.11"
+  }
+}
