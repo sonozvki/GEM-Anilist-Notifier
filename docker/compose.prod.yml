@@ -1,0 +1,10 @@
+services:
+  bot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    env_file: ../.env.production
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

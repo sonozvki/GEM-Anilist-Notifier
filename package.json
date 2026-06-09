@@ -1,17 +1,26 @@
 {
   "name": "ldo-bot-discord",
   "version": "1.0.0",
-  "module": "src/index.ts",
+  "module": "src/app/index.ts",
   "scripts": {
-    "start": "bun run src/index.ts",
-    "dev": "bun --watch src/index.ts"
+    "dev": "NODE_ENV=development bun --watch src/app/index.ts",
+    "start": "NODE_ENV=production bun run src/app/index.ts",
+    "docker:dev": "docker compose -f docker/compose.dev.yml up --build",
+    "docker:prod": "docker compose -f docker/compose.prod.yml up --build",
+    "docker:dev:down": "docker compose -f docker/compose.dev.yml down",
+    "docker:prod:down": "docker compose -f docker/compose.prod.yml down",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
   },
   "dependencies": {
     "discord.js": "^14.16.3",
     "node-cron": "^3.0.3"
   },
   "devDependencies": {
-    "bun-types": "latest",
-    "@types/node-cron": "^3.0.11"
+    "@biomejs/biome": "^1.9.4",
+    "@types/node-cron": "^3.0.11",
+    "bun-types": "latest"
   }
 }

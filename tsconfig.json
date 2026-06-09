@@ -5,7 +5,14 @@
     "moduleResolution": "bundler",
     "types": ["bun-types"],
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["src/shared/*"],
+      "@entities/*": ["src/entities/*"],
+      "@features/*": ["src/features/*"],
+      "@app/*": ["src/app/*"]
+    }
   },
   "include": ["src/**/*"]
 }
