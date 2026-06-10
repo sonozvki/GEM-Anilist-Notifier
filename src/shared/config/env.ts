@@ -10,6 +10,8 @@ export const config = {
   env: NODE_ENV,
   discord: {
     token: requireEnv("TOKEN_BOT"),
+    clientId: requireEnv("CLIENT_ID"),
+    guildId: requireEnv("GUILD_ID"),
     channelId: requireEnv("CHANNEL_ID"),
   },
   anilist: {

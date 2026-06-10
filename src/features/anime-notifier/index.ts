@@ -2,6 +2,7 @@ import type { TextChannel } from "discord.js";
 import { config } from "@shared/config/env";
 import { discordClient } from "@shared/discord/client";
 import { logger } from "@shared/lib/logger";
+import { getSubscribers } from "@features/subscriptions/model/storage";
 import { fetchWatchingList } from "./api/anilist";
 import { applyWatchingList, detectNewEpisodes } from "./model/notifier-logic";
 import { loadState, saveState } from "./model/storage";
@@ -24,9 +25,14 @@ export async function runAnimeNotifier(): Promise<void> {
   const notifications = detectNewEpisodes(watchingList, state);
 
   for (const { anime, episode } of notifications) {
-    const embed = buildEpisodeEmbed(anime, episode);
-    await (channel as TextChannel).send({ embeds: [embed] });
-    logger.info(`Notified: ${anime.title} ep ${episode}`);
+    const subscribers = await getSubscribers(String(anime.mediaId));
+    const mentions = subscribers.map((id) => `<@${id}>`).join(" ");
+
+    await (channel as TextChannel).send({
+      content: mentions || undefined,
+      embeds: [buildEpisodeEmbed(anime, episode)],
+    });
+    logger.info(`Notified: ${anime.title} ep ${episode} (${subscribers.length} ping(s))`);
   }
 
   const nextState = applyWatchingList(watchingList, state);
