@@ -15,7 +15,6 @@ export async function handleAutocomplete(interaction: AutocompleteInteraction): 
         .filter((a) => a.title.toLowerCase().includes(focused))
         .slice(0, 25)
         .map((a) => ({ name: a.title, value: `${a.mediaId}::${a.title}` }));
-
       await interaction.respond(choices);
       return;
     }
@@ -73,11 +72,7 @@ export async function handleCommand(interaction: ChatInputCommandInteraction): P
       const embed = new EmbedBuilder()
         .setColor(0x02a9ff)
         .setTitle("Tes abonnements")
-        .setDescription(
-          subscribed.length > 0
-            ? subscribed.map((e) => `• ${e.title}`).join("\n")
-            : "Aucun abonnement actif.",
-        )
+        .setDescription(subscribed.length > 0 ? subscribed.map((e) => `• ${e.title}`).join("\n") : "Aucun abonnement actif.")
         .setFooter({ text: "AniList Notifier" });
 
       await interaction.reply({ embeds: [embed], ephemeral: true });

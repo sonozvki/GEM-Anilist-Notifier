@@ -26,8 +26,10 @@ const WATCHING_LIST_QUERY = `
   }
 `;
 
-export async function fetchWatchingList(username: string): Promise<AiringEpisode[]> {
-  if (cache && Date.now() < cache.expiry) return cache.data;
+export async function fetchWatchingList(username: string): Promise<AiringEpisode[]>
+{
+  if (cache && Date.now() < cache.expiry)
+    return cache.data;
 
   const res = await fetch(ANILIST_API, {
     method: "POST",
@@ -40,7 +42,6 @@ export async function fetchWatchingList(username: string): Promise<AiringEpisode
   const json = (await res.json()) as any;
   const lists: any[] = json?.data?.MediaListCollection?.lists ?? [];
   const result: AiringEpisode[] = [];
-
   for (const list of lists) {
     for (const entry of list.entries) {
       const media = entry.media;
@@ -55,11 +56,11 @@ export async function fetchWatchingList(username: string): Promise<AiringEpisode
       });
     }
   }
-
   cache = { data: result, expiry: Date.now() + CACHE_TTL_MS };
   return result;
 }
 
-export function invalidateWatchingListCache(): void {
+export function invalidateWatchingListCache(): void
+{
   cache = null;
 }

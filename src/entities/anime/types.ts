@@ -1,4 +1,5 @@
-export interface AiringEpisode {
+export interface AiringEpisode
+{
   mediaId: number;
   title: string;
   episode: number;

@@ -2,11 +2,7 @@ import { config } from "@shared/config/env";
 import { discordClient } from "@shared/discord/client";
 import { logger } from "@shared/lib/logger";
 import { fetchWatchingList } from "@shared/api/anilist";
-import {
-  handleAutocomplete,
-  handleCommand,
-  registerCommands,
-} from "@features/subscriptions";
+import {handleAutocomplete, handleCommand, registerCommands} from "@features/subscriptions";
 import { registerCronJobs } from "./cron";
 
 discordClient.once("clientReady", async () => {

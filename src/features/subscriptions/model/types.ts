@@ -1,6 +1,6 @@
 export interface AnimeSubscription {
   title: string;
-  subscribers: string[]; // Discord user IDs
+  subscribers: string[]; // user IDs
 }
 
 export interface SubscriptionsData {

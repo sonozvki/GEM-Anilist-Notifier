@@ -8,8 +8,9 @@ import { applyWatchingList, detectNewEpisodes } from "./model/notifier-logic";
 import { loadState, saveState } from "./model/storage";
 import { buildEpisodeEmbed } from "./ui/embed";
 
-export async function runAnimeNotifier(): Promise<void> {
-  logger.info("Running anime notifier check...");
+export async function runAnimeNotifier(): Promise<void>
+{
+  logger.info("[RUNNING] anime notifier check");
 
   const [watchingList, state] = await Promise.all([
     fetchWatchingList(config.anilist.username),
@@ -23,20 +24,16 @@ export async function runAnimeNotifier(): Promise<void> {
   }
 
   const notifications = detectNewEpisodes(watchingList, state);
-
   for (const { anime, episode } of notifications) {
     const subscribers = await getSubscribers(String(anime.mediaId));
     const mentions = subscribers.map((id) => `<@${id}>`).join(" ");
-
     await (channel as TextChannel).send({
       content: mentions || undefined,
       embeds: [buildEpisodeEmbed(anime, episode)],
     });
     logger.info(`Notified: ${anime.title} ep ${episode} (${subscribers.length} ping(s))`);
   }
-
   const nextState = applyWatchingList(watchingList, state);
   await saveState(nextState);
-
   logger.info(`Check done. ${notifications.length} notification(s) sent.`);
 }
