@@ -3,7 +3,7 @@ import { discordClient } from "@shared/discord/client";
 import { logger } from "@shared/lib/logger";
 import { registerCronJobs } from "./cron";
 
-discordClient.once("ready", () => {
+discordClient.once("clientReady", () => {
   logger.info(`Bot ready as ${discordClient.user?.tag} [${config.env}]`);
   registerCronJobs();
 });

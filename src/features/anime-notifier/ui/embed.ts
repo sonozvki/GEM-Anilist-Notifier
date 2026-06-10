@@ -6,7 +6,7 @@ export function buildEpisodeEmbed(anime: AiringEpisode, episode: number): EmbedB
     .setColor(0x02a9ff)
     .setTitle(anime.title)
     .setURL(anime.siteUrl)
-    .setDescription(`L'épisode **${episode}** est maintenant disponible !`)
+    .setDescription(`L'épisode **${episode}** est dispo !`)
     .setThumbnail(anime.coverImage)
     .setTimestamp()
     .setFooter({ text: "AniList Notifier" });
