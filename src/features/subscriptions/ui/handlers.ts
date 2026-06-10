@@ -1,5 +1,5 @@
 import type { AutocompleteInteraction, ChatInputCommandInteraction } from "discord.js";
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, MessageFlags } from "discord.js";
 import { config } from "@shared/config/env";
 import { fetchWatchingList } from "@shared/api/anilist";
 import { addSubscriber, loadSubscriptions, removeSubscriber } from "../model/storage";
@@ -47,7 +47,7 @@ export async function handleCommand(interaction: ChatInputCommandInteraction): P
 
       await interaction.reply({
         content: added ? `Abonné à **${title}** ! Tu recevras dorénavant une notif quand un épisode sortira` : `Tu es déjà abonné à **${title}**.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       break;
     }
@@ -59,7 +59,7 @@ export async function handleCommand(interaction: ChatInputCommandInteraction): P
 
       await interaction.reply({
         content: removed ? `Désabonné de **${title}**.` : `Tu n'étais pas abonné à **${title}**.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       break;
     }
