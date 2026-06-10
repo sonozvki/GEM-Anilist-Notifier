@@ -12,7 +12,7 @@
     "lint": "biome check src/",
     "lint:fix": "biome check --write src/",
     "typecheck": "tsc --noEmit",
-    "test": "bun test"
+    "test": "bun test tests/"
   },
   "dependencies": {
     "discord.js": "^14.16.3",
