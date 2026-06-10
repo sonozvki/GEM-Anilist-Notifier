@@ -33,7 +33,7 @@ export async function runAnimeNotifier(): Promise<void>
     });
     logger.info(`Notified: ${anime.title} ep ${episode} (${subscribers.length} ping(s))`);
   }
-  const nextState = applyWatchingList(watchingList, state);
+  const nextState = applyWatchingList(watchingList);
   await saveState(nextState);
   logger.info(`Check done. ${notifications.length} notification(s) sent.`);
 }
