@@ -124,3 +124,9 @@ Every hour in production (every minute in dev), the bot:
 5. Updates the stored state
 
 The watching list is cached for 5 minutes to keep autocomplete fast.
+
+---
+
+<div align="center">
+  <img src="/.github/assets/i-made-friends-with-the-second-prettiest-girl-in-my-class-class-de-ni-banme.gif" alt="hehe" />
+</div>
