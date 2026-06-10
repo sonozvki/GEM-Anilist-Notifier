@@ -5,32 +5,36 @@ import { fetchWatchingList } from "@shared/api/anilist";
 import { addSubscriber, loadSubscriptions, removeSubscriber } from "../model/storage";
 
 export async function handleAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
-  const focused = interaction.options.getFocused().toLowerCase();
-  const commandName = interaction.commandName;
+  try {
+    const focused = interaction.options.getFocused().toLowerCase();
+    const commandName = interaction.commandName;
 
-  if (commandName === "subscribe") {
-    const watchingList = await fetchWatchingList(config.anilist.username);
-    const choices = watchingList
-      .filter((a) => a.title.toLowerCase().includes(focused))
-      .slice(0, 25)
-      .map((a) => ({ name: a.title, value: `${a.mediaId}::${a.title}` }));
+    if (commandName === "subscribe") {
+      const watchingList = await fetchWatchingList(config.anilist.username);
+      const choices = watchingList
+        .filter((a) => a.title.toLowerCase().includes(focused))
+        .slice(0, 25)
+        .map((a) => ({ name: a.title, value: `${a.mediaId}::${a.title}` }));
 
-    await interaction.respond(choices);
-    return;
-  }
+      await interaction.respond(choices);
+      return;
+    }
 
-  if (commandName === "unsubscribe") {
-    const data = await loadSubscriptions();
-    const choices = Object.entries(data)
-      .filter(
-        ([, entry]) =>
-          entry.subscribers.includes(interaction.user.id) &&
-          entry.title.toLowerCase().includes(focused),
-      )
-      .slice(0, 25)
-      .map(([mediaId, entry]) => ({ name: entry.title, value: `${mediaId}::${entry.title}` }));
+    if (commandName === "unsubscribe") {
+      const data = await loadSubscriptions();
+      const choices = Object.entries(data)
+        .filter(
+          ([, entry]) =>
+            entry.subscribers.includes(interaction.user.id) &&
+            entry.title.toLowerCase().includes(focused),
+        )
+        .slice(0, 25)
+        .map(([mediaId, entry]) => ({ name: entry.title, value: `${mediaId}::${entry.title}` }));
 
-    await interaction.respond(choices);
+      await interaction.respond(choices);
+    }
+  } catch {
+    await interaction.respond([]).catch(() => {});
   }
 }
 

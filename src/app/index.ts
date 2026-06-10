@@ -1,6 +1,7 @@
 import { config } from "@shared/config/env";
 import { discordClient } from "@shared/discord/client";
 import { logger } from "@shared/lib/logger";
+import { fetchWatchingList } from "@shared/api/anilist";
 import {
   handleAutocomplete,
   handleCommand,
@@ -12,6 +13,10 @@ discordClient.once("clientReady", async () => {
   logger.info(`Bot ready as ${discordClient.user?.tag} [${config.env}]`);
   await registerCommands();
   registerCronJobs();
+
+  fetchWatchingList(config.anilist.username)
+    .then((list) => logger.info(`AniList cache warmed (${list.length} shows)`))
+    .catch((err) => logger.warn("AniList cache warm-up failed", err));
 });
 
 discordClient.on("interactionCreate", async (interaction) => {
