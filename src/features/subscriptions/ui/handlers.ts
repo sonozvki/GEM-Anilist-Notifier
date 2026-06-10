@@ -75,7 +75,7 @@ export async function handleCommand(interaction: ChatInputCommandInteraction): P
         .setDescription(subscribed.length > 0 ? subscribed.map((e) => `• ${e.title}`).join("\n") : "Aucun abonnement actif.")
         .setFooter({ text: "AniList Notifier" });
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       break;
     }
   }
