@@ -5,6 +5,25 @@ const CACHE_TTL_MS = 5 * 60 * 1000;
 
 let cache: { data: AiringEpisode[]; expiry: number } | null = null;
 
+interface AniListResponse
+{
+  data: {
+    MediaListCollection: {
+      lists: Array<{
+        entries: Array<{
+          media: {
+            id: number;
+            siteUrl: string;
+            title: { userPreferred: string };
+            coverImage: { large: string };
+            nextAiringEpisode: { episode: number; airingAt: number } | null;
+          };
+        }>;
+      }>;
+    };
+  };
+}
+
 const WATCHING_LIST_QUERY = `
   query ($username: String) {
     MediaListCollection(userName: $username, type: ANIME, status: CURRENT) {
@@ -26,10 +45,8 @@ const WATCHING_LIST_QUERY = `
   }
 `;
 
-export async function fetchWatchingList(username: string): Promise<AiringEpisode[]>
-{
-  if (cache && Date.now() < cache.expiry)
-    return cache.data;
+export async function fetchWatchingList(username: string): Promise<AiringEpisode[]> {
+  if (cache && Date.now() < cache.expiry) return cache.data;
 
   const res = await fetch(ANILIST_API, {
     method: "POST",
@@ -39,13 +56,14 @@ export async function fetchWatchingList(username: string): Promise<AiringEpisode
 
   if (!res.ok) throw new Error(`AniList API error: ${res.status}`);
 
-  const json = (await res.json()) as any;
-  const lists: any[] = json?.data?.MediaListCollection?.lists ?? [];
+  const { data } = (await res.json()) as AniListResponse;
   const result: AiringEpisode[] = [];
-  for (const list of lists) {
+
+  for (const list of data.MediaListCollection.lists) {
     for (const entry of list.entries) {
-      const media = entry.media;
+      const { media } = entry;
       if (!media.nextAiringEpisode) continue;
+
       result.push({
         mediaId: media.id,
         title: media.title.userPreferred,
@@ -56,11 +74,11 @@ export async function fetchWatchingList(username: string): Promise<AiringEpisode
       });
     }
   }
+
   cache = { data: result, expiry: Date.now() + CACHE_TTL_MS };
   return result;
 }
 
-export function invalidateWatchingListCache(): void
-{
+export function invalidateWatchingListCache(): void {
   cache = null;
 }
