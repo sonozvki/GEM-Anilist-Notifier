@@ -1,19 +1,19 @@
 <div align="center">
   <img src="/.github/assets/umi-asanagi-anime-onesie.gif" width="160" alt="GEM" />
 
-  # GEM: Your AniList Notifier
+  # GEM : AniList Notifier
 
-  Discord bot that watches your AniList and sends a notification when a new anime episode drops.
+  Bot Discord qui check ton AniList et t'envoie une notification dès qu'un nouvel épisode sort.
 </div>
 
 ---
 
-## Features
+## Fonctionnalités
 
-- Notifies a Discord channel when a new episode airs
-- Pings only the users subscribed to that specific anime
-- Slash commands to manage subscriptions (`/subscribe`, `/unsubscribe`, `/subscriptions`)
-- Catches up on missed episodes if the bot was offline
+- Notifie un channel Discord à chaque nouvel épisode
+- Mentionne uniquement les membres abonnés à cet anime
+- Commandes slash pour gérer les abonnements (`/subscribe`, `/unsubscribe`, `/subscriptions`)
+- Rattrape les épisodes manqués si le bot était hors ligne
 
 ## Stack
 
@@ -21,109 +21,109 @@
 - [discord.js v14](https://discord.js.org)
 - [AniList GraphQL API](https://anilist.gitbook.io/anilist-apiv2-docs)
 - [node-cron](https://github.com/node-cron/node-cron)
-- Docker - containerization
+- Docker - conteneurisation
 
-## Project structure
+## Structure du projet
 
 ```
 src/
-├── app/                  # Entry point, cron registration
+├── app/                  # Point d'entrée, enregistrement du cron
 ├── features/
-│   ├── anime-notifier/   # Episode detection & Discord notifications
-│   └── subscriptions/    # Slash commands & per-user subscriptions
-├── entities/anime/       # Shared anime types
-└── shared/               # Config, logger, Discord client, AniList API
-tests/                    # Unit tests (bun test)
-docker/                   # Dockerfile + compose files
-data/                     # Runtime JSON state (gitignored)
+│   ├── anime-notifier/   # Détection des épisodes & notifications Discord
+│   └── subscriptions/    # Commandes slash & abonnements par utilisateur
+├── entities/anime/       # Types métier anime
+└── shared/               # Config, logger, client Discord, API AniList
+tests/                    # Tests unitaires (bun test)
+docker/                   # Dockerfile + fichiers compose
+data/                     # État JSON runtime (gitignore)
 ```
 
-Architecture follows [Feature-Sliced Design](https://feature-sliced.design).
+Architecture inspirée de [Feature-Sliced Design](https://feature-sliced.design).
 
-## Setup
+## Installation
 
-### 1. Prerequisites
+### 1. Prérequis
 
-- [Bun](https://bun.sh) installed (or Docker)
-- A Discord bot created on the [Developer Portal](https://discord.com/developers/applications)
-- An [AniList](https://anilist.co) account with a watching list
+- [Bun](https://bun.sh) installé (ou Docker)
+- Un bot Discord créé sur le [Developer Portal](https://discord.com/developers/applications)
+- Un compte [AniList](https://anilist.co) avec une liste en cours
 
-### 2. Configure environment
+### 2. Configurer l'environnement
 
 ```bash
 cp .env.example .env.development
 ```
 
-Fill in `.env.development`:
+Remplir `.env.development` :
 
-| Variable | Where to find it |
+| Variable | Où la trouver |
 |---|---|
 | `TOKEN_BOT` | Discord Developer Portal → Bot → Token |
 | `CLIENT_ID` | Discord Developer Portal → Application ID |
-| `GUILD_ID` | Discord → right-click your server → Copy Server ID |
-| `CHANNEL_ID` | Discord → right-click the target channel → Copy Channel ID |
-| `ANILIST_USERNAME` | Your AniList profile URL |
+| `GUILD_ID` | Discord → clic droit sur le serveur → Copier l'identifiant |
+| `CHANNEL_ID` | Discord → clic droit sur le channel → Copier l'identifiant |
+| `ANILIST_USERNAME` | URL de ton profil AniList |
 
-> Enable **Developer Mode** in Discord settings (Settings → Advanced) to access Copy ID options.
+> Activer le **Mode développeur** dans Discord (Paramètres → Avancé) pour accéder aux options "Copier l'identifiant".
 
-### 3. Invite the bot
+### 3. Inviter le bot
 
-In the Developer Portal → OAuth2 → URL Generator:
-- Scopes: `bot`
-- Permissions: `Send Messages`, `Embed Links`
+Dans le Developer Portal → OAuth2 → URL Generator :
+- Scopes : `bot`
+- Permissions : `Send Messages`, `Embed Links`
 
-Open the generated URL and add the bot to your server.
+Ouvrir l'URL générée et ajouter le bot à ton serveur.
 
-### 4. Install dependencies
+### 4. Installer les dépendances
 
 ```bash
 bun install
 ```
 
-## Running
+## Lancer le bot
 
 ```bash
-# Development (hot-reload, cron every minute)
+# Développement (hot-reload, cron toutes les minutes)
 bun dev
 
 # Production
 bun start
 
-# With Docker
-bun run docker:dev    # development
+# Avec Docker
+bun run docker:dev    # développement
 bun run docker:prod   # production
 ```
 
-On first run the bot stores the current state without notifying. Notifications start from the next episode onward.
+Au premier démarrage, le bot enregistre l'état sans notifier. Les notifications commencent à partir de l'épisode suivant.
 
-## Slash commands
+## Commandes slash
 
-| Command | Description |
+| Commande | Description |
 |---|---|
-| `/subscribe` | Subscribe to episode notifications for an anime |
-| `/unsubscribe` | Unsubscribe from an anime |
-| `/subscriptions` | View your active subscriptions |
+| `/subscribe` | S'abonner aux notifications d'un anime |
+| `/unsubscribe` | Se désabonner d'un anime |
+| `/subscriptions` | Voir ses abonnements actifs |
 
-Responses are ephemeral (only visible to you).
+Les réponses sont éphémères (visibles uniquement par toi).
 
-## Development
+## Développement
 
 ```bash
-bun run typecheck   # Type check
-bun test tests/     # Run tests
+bun run typecheck   # Vérification des types
+bun test tests/     # Lancer les tests
 ```
 
-## How it works
+## Fonctionnement
 
-Every hour in production (every minute in dev), the bot:
+Toutes les heures en production (toutes les minutes en dev), le bot :
 
-1. Fetches your AniList watching list
-2. Compares the current `nextAiringEpisode` with the stored state
-3. If the episode number advanced → sends a notification with a Discord embed
-4. Pings subscribed users for that anime
-5. Updates the stored state
+1. Récupère ta liste AniList en cours
+2. Compare le `nextAiringEpisode` actuel avec l'état stocké
+3. Si le numéro d'épisode a avancé → envoie une notification avec un embed Discord
+4. Mentionne les membres abonnés à cet anime
+5. Met à jour l'état stocké
 
-The watching list is cached for 5 minutes to keep autocomplete fast.
+La liste est mise en cache 5 minutes pour que l'autocomplete reste instantané.
 
 ---
 
