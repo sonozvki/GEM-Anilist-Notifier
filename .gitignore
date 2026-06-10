@@ -1,5 +1,17 @@
+# Dependencies
 node_modules/
+
+# Environment (secrets)
 .env
 .env.development
 .env.production
+.env.local
+
+# Runtime data
 data/*
+
+# macOS
+.DS_Store
+
+# Test coverage
+coverage/
