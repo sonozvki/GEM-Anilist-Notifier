@@ -42,7 +42,7 @@ export async function handleCommand(interaction: ChatInputCommandInteraction): P
       const added = await addSubscriber(mediaId, title, interaction.user.id);
 
       await interaction.reply({
-        content: added ? `Abonné à **${title}** !` : `Tu es déjà abonné à **${title}**.`,
+        content: added ? `Abonné à **${title}** ! Tu recevras dorénavant une notif quand un épisode sortira` : `Tu es déjà abonné à **${title}**.`,
         ephemeral: true,
       });
       break;
