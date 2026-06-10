@@ -23,16 +23,15 @@ export function detectNewEpisodes(watchingList: AiringEpisode[], state: StorageD
   return notifications;
 }
 
-export function applyWatchingList(watchingList: AiringEpisode[]): StorageData {
-  const shows: StorageData["shows"] = {};
-
+export function applyWatchingList(watchingList: AiringEpisode[], state: StorageData) : StorageData
+{
+  const next = structuredClone(state);
   for (const anime of watchingList) {
-    shows[String(anime.mediaId)] = {
+    next.shows[String(anime.mediaId)] = {
       title: anime.title,
       nextEpisode: anime.episode,
       nextAiringAt: anime.airingAt,
     };
   }
-
-  return { shows };
+  return next;
 }
