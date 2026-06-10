@@ -9,8 +9,6 @@
     "docker:prod": "docker compose -f docker/compose.prod.yml up --build",
     "docker:dev:down": "docker compose -f docker/compose.dev.yml down",
     "docker:prod:down": "docker compose -f docker/compose.prod.yml down",
-    "lint": "biome check src/",
-    "lint:fix": "biome check --write src/",
     "typecheck": "tsc --noEmit",
     "test": "bun test tests/"
   },
@@ -19,7 +17,6 @@
     "node-cron": "^3.0.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
     "@types/node-cron": "^3.0.11",
     "bun-types": "latest"
   }
