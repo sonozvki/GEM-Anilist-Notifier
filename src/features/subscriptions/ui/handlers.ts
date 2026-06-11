@@ -11,8 +11,7 @@ export async function handleAutocomplete(interaction: AutocompleteInteraction): 
 
     if (commandName === "subscribe") {
       const watchingList = await fetchWatchingList(config.anilist.username);
-      const choices = watchingList
-        .filter((a) => a.title.toLowerCase().includes(focused))
+      const choices = (focused ? watchingList.filter((a) => a.title.toLowerCase().includes(focused)) : watchingList)
         .slice(0, 25)
         .map((a) => ({ name: a.title, value: `${a.mediaId}::${a.title}` }));
       await interaction.respond(choices);
