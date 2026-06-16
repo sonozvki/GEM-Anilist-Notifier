@@ -11,9 +11,11 @@ export async function handleAutocomplete(interaction: AutocompleteInteraction): 
 
     if (commandName === "subscribe") {
       const watchingList = await fetchWatchingList(config.anilist.username);
+      logger.info(`Autocomplete subscribe: focused="${focused}", ${watchingList.length} shows in cache`);
       const choices = (focused ? watchingList.filter((a) => a.title.toLowerCase().includes(focused)) : watchingList)
         .slice(0, 25)
         .map((a) => ({ name: a.title, value: `${a.mediaId}::${a.title}` }));
+      logger.info(`Responding with ${choices.length} choices`);
       await interaction.respond(choices);
       return;
     }
