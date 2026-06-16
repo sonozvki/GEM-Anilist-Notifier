@@ -1,6 +1,7 @@
 import type { AutocompleteInteraction, ChatInputCommandInteraction } from "discord.js";
 import { EmbedBuilder, MessageFlags } from "discord.js";
 import { config } from "@shared/config/env";
+import { logger } from "@shared/lib/logger";
 import { fetchWatchingList } from "@shared/api/anilist";
 import { addSubscriber, loadSubscriptions, removeSubscriber } from "../model/storage";
 
