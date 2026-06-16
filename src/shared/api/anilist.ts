@@ -14,7 +14,7 @@ interface AniListResponse
           media: {
             id: number;
             siteUrl: string;
-            title: { userPreferred: string };
+            title: { userPreferred: string; english: string | null };
             coverImage: { large: string };
             nextAiringEpisode: { episode: number; airingAt: number } | null;
           };
@@ -32,7 +32,7 @@ const WATCHING_LIST_QUERY = `
           media {
             id
             siteUrl
-            title { userPreferred }
+            title { userPreferred english }
             coverImage { large }
             nextAiringEpisode {
               episode
@@ -66,7 +66,7 @@ export async function fetchWatchingList(username: string): Promise<AiringEpisode
 
       result.push({
         mediaId: media.id,
-        title: media.title.userPreferred,
+        title: media.title.english ?? media.title.userPreferred,
         episode: media.nextAiringEpisode.episode,
         airingAt: media.nextAiringEpisode.airingAt,
         coverImage: media.coverImage.large,
