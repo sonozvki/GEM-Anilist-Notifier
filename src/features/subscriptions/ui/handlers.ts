@@ -15,7 +15,7 @@ export async function handleAutocomplete(interaction: AutocompleteInteraction): 
       logger.info(`Autocomplete subscribe: focused="${focused}", ${watchingList.length} shows in cache`);
       const choices = (focused ? watchingList.filter((a) => a.title.toLowerCase().includes(focused)) : watchingList)
         .slice(0, 25)
-        .map((a) => ({ name: a.title, value: `${a.mediaId}::${a.title}` }));
+        .map((a) => ({ name: a.title.slice(0, 100), value: String(a.mediaId) }));
       logger.info(`Responding with ${choices.length} choices`);
       await interaction.respond(choices);
       return;
@@ -30,7 +30,7 @@ export async function handleAutocomplete(interaction: AutocompleteInteraction): 
             entry.title.toLowerCase().includes(focused),
         )
         .slice(0, 25)
-        .map(([mediaId, entry]) => ({ name: entry.title, value: `${mediaId}::${entry.title}` }));
+        .map(([mediaId, entry]) => ({ name: entry.title.slice(0, 100), value: mediaId }));
 
       await interaction.respond(choices);
     }
@@ -42,8 +42,10 @@ export async function handleAutocomplete(interaction: AutocompleteInteraction): 
 export async function handleCommand(interaction: ChatInputCommandInteraction): Promise<void> {
   switch (interaction.commandName) {
     case "subscribe": {
-      const raw = interaction.options.getString("anime", true);
-      const [mediaId, title] = raw.split("::");
+      const mediaId = interaction.options.getString("anime", true);
+      const watchingList = await fetchWatchingList(config.anilist.username);
+      const anime = watchingList.find((a) => String(a.mediaId) === mediaId);
+      const title = anime?.title ?? mediaId;
       const added = await addSubscriber(mediaId, title, interaction.user.id);
 
       await interaction.reply({
@@ -54,8 +56,9 @@ export async function handleCommand(interaction: ChatInputCommandInteraction): P
     }
 
     case "unsubscribe": {
-      const raw = interaction.options.getString("anime", true);
-      const [mediaId, title] = raw.split("::");
+      const mediaId = interaction.options.getString("anime", true);
+      const data = await loadSubscriptions();
+      const title = data[mediaId]?.title ?? mediaId;
       const removed = await removeSubscriber(mediaId, interaction.user.id);
 
       await interaction.reply({
